@@ -86,19 +86,19 @@ class Modelo:
         return caracteristicas
 
     def encontrar_caracteristicas_significativas(self):
-        lambda_val = 1e-5  # Valor inicial de lambda
+        lambda_val = 10 ** (-11)  # Valor inicial de lambda
         while True:
             caracteristicas = self.implementar_modelo(lambda_val)
             # Contar pesos significativamente distintos de cero
             pesos_no_nulos = sum(1 for i in self.I if abs(
-                caracteristicas[i][1]) > 1e-11)
+                caracteristicas[i][1]) > 10 ** (-11))
             if pesos_no_nulos == 5:
                 break
             lambda_val *= 10  # Incrementar lambda
 
         # Imprimir características significativas y valor de lambda
         caracteristicas_significativas = [
-            caracteristicas[i][0] for i in self.I if abs(caracteristicas[i][1]) > 1e-11]
+            caracteristicas[i][0] for i in self.I if abs(caracteristicas[i][1]) > 10 ** (-11)]
         print(
             f'Características más importantes: {caracteristicas_significativas}')
         print(f'Valor de lambda utilizado: {lambda_val}')
