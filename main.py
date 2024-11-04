@@ -52,7 +52,7 @@ class Modelo:
         '''
 
         # Variables de decisión
-        w_i = model.addVars(self.I, vtype=GRB.CONTINUOUS, name='w_i')
+        w_i = model.addVars(self.I, lb=-GRB.INFINITY, name='w_i')
         b = model.addVar(vtype=GRB.CONTINUOUS, name='b')
 
         # Actualizamos el modelo

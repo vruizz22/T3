@@ -16,7 +16,7 @@ def resolver_modelo(model):
     model.optimize()
     print("________________________________________________\n")
     print("Resultados Problema 3.3 Formulación Matematica 1\n")
-    print("Modelo final de regresión:\n")
+    print("Modelo final de regresión lineal:\n")
     
     print("Estructura:")
     print("Y = b + w1*x1 + w2*x2 + w3*x3 + w4*x4 + w5*x5")
@@ -30,11 +30,15 @@ def resolver_modelo(model):
     for i in range(5):
           print(f"x{[i+1]} = {data.columns[i]}")
           
-    print("\nAdemás, se presenta los siguientes pesos:\n")
+    print("\nAdemás, se presentan los siguientes pesos: (Los números de los pesos no son los mismos que en las partes 1 y 2 del presente modelo; en esta parte, se consideran como un nuevo conjunto de valores del 1 al 5).\n")
+    
 
     for i in range(5):
         print(f'W{i+1} = {w[i].X}')
-    print(f'b = {b.X} cota inferior de gramos de relleno para almohadas')
+    print(f'b = {b.X}')
+    
+    
+    print("\nEs importante tener en cuenta que el renderizado del modelo puede generar una carga considerable en el procesador, la cual varía según el tipo de computadora desde la cual se ejecute. Esto se debe a la utilización de hilos o threads. En un computador menos potente, w3 tiene un peso significativo, mientras que en un computador más potente, w7 son más influyentes.")
 
 # Importar los datos del archivo CSV:
 data = pd.read_csv('datos_pesos_significativos.csv')

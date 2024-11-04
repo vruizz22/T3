@@ -51,7 +51,7 @@ class Modelo:
         '''
 
         # Variables de decisión
-        w_i = model.addVars(self.I, vtype=GRB.CONTINUOUS, name='w_i')
+        w_i = model.addVars(self.I, lb=-GRB.INFINITY, name='w_i')
         b = model.addVar(vtype=GRB.CONTINUOUS, name='b')
         # z_i varible que representa el valor absoluto de w_i
         z_i = model.addVars(self.I, vtype=GRB.CONTINUOUS, name='z_i')
@@ -94,7 +94,7 @@ class Modelo:
                 caracteristicas[i][1]) > 10 ** (-11))
             if pesos_no_nulos == 5:
                 break
-            lambda_val *= 10  # Incrementar lambda
+            lambda_val += 1000  # Incrementar lambda
 
         # Imprimir características significativas y valor de lambda
         caracteristicas_significativas = [

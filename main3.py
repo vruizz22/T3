@@ -52,7 +52,7 @@ class Modelo_R:
         '''
 
         # Variables de decisión
-        w_i = model.addVars(self.I, vtype=GRB.CONTINUOUS, name='w_i')
+        w_i = model.addVars(self.I, lb=-GRB.INFINITY, name='w_i')
         b = model.addVar(vtype=GRB.CONTINUOUS, name='b')
         # z_i varible que representa el valor absoluto de w_i
         z_i = model.addVars(self.I, vtype=GRB.CONTINUOUS, name='z_i')
@@ -95,20 +95,24 @@ class Modelo_R:
                 caracteristicas[i][1]) > 10 ** (-11))
             if pesos_no_nulos == 5:
                 break
-            lambda_val *= 10  # Incrementar lambda
+            lambda_val += 1000  # Incrementar lambda
 
         # Imprimir características significativas y valor de lambda
         caracteristicas_significativas = [
             caracteristicas[i][0] for i in self.I if abs(caracteristicas[i][1]) > 10 ** (-11)]
+        # Lista de las caracteristicas más importantes
+        lista_posiciones = [i for i in self.I if abs(
+            caracteristicas[i][1]) > 10 ** (-11)
+        ]
         print(
             f'Características más importantes: {caracteristicas_significativas}')
         print(f'Valor de lambda utilizado: {lambda_val}')
-        return caracteristicas_significativas
+        return caracteristicas_significativas, lista_posiciones
 
 
 class Modelo:
 
-    def __init__(self) -> None:
+    def __init__(self, lista_pos) -> None:
 
         # Lectura de archivo una sola vez
         datos = leer_archivo('muestras.csv')
@@ -117,7 +121,7 @@ class Modelo:
         # ['peso(kg)', 'estatura(cm)', 'contorno_cuello(cm)',
         # 'contorno_caja_toraxica(cm)', 'largo_del_brazo(cm)']
 
-        self.E = [1, 2, 7, 11, 13]
+        self.E = lista_pos
         self.R = range(1, datos.shape[0] + 1)
 
         # Lectura de archivos y creación de parametros
@@ -153,7 +157,7 @@ class Modelo:
         '''
 
         # Variables de decisión
-        w_i = model.addVars(self.E, vtype=GRB.CONTINUOUS, name='w_i')
+        w_i = model.addVars(self.E, lb=-GRB.INFINITY, name='w_i')
         b = model.addVar(vtype=GRB.CONTINUOUS, name='b')
 
         # Actualizamos el modelo
@@ -187,8 +191,8 @@ class Modelo:
 
 if __name__ == '__main__':
     modelo_R = Modelo_R()
-    caracteristicas = modelo_R.encontrar_caracteristicas_significativas()
-    modelo = Modelo()
+    caracteristicas, lista_pos = modelo_R.encontrar_caracteristicas_significativas()
+    modelo = Modelo(lista_pos)
     ov = modelo.implementar_modelo(caracteristicas)
     locale.setlocale(locale.LC_ALL, '')
     print(
